@@ -1,0 +1,1 @@
+brainstorming and building an all-in-one prospecting workflow that researches, reaches out to the right people and gets back the most well-defined visual breakdown of the best option deal with next steps. The customer brings in their company info deets doc to start with, the rest is handled by the agents
