@@ -1,1 +1,7 @@
-{ "functions": { "api/**/*.ts": { "maxDuration": 120 } } }
+{
+  "functions": { "api/**/*.ts": { "maxDuration": 120 } },
+  "rewrites": [
+    { "source": "/vendor-sandbox", "destination": "/api/vendor-sandbox" },
+    { "source": "/vendor-sandbox/submit", "destination": "/api/vendor-sandbox/submit" }
+  ]
+}
