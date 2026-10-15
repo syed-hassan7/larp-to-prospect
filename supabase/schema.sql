@@ -63,3 +63,24 @@ grant usage on schema public to anon, authenticated;
 grant select on public.runs, public.run_events, public.claims to anon, authenticated;
 alter publication supabase_realtime add table run_events;
 alter publication supabase_realtime add table runs;
+
+-- v2 additions (applied via migration outreach_and_gaps)
+create table if not exists outreach (
+  id bigint generated always as identity primary key,
+  run_id uuid not null references runs(id) on delete cascade,
+  candidate_id text not null, gap_field text,
+  channel text not null check (channel in ('form','email','call')),
+  target text, status text not null default 'planned',
+  message text, screenshot_url text, reply_text text, reply_at timestamptz,
+  sandbox boolean not null default false, error text, created_at timestamptz not null default now()
+);
+create index if not exists outreach_run on outreach(run_id);
+alter table outreach enable row level security;
+create policy "anon read outreach" on outreach for select using (true);
+grant select on public.outreach to anon, authenticated;
+grant all on public.outreach to service_role;
+alter table claims add column if not exists source_type text not null default 'web';
+alter table claims add column if not exists channel text not null default 'web';
+alter table runs add column if not exists gaps jsonb default '[]'::jsonb;
+alter publication supabase_realtime add table outreach;
+-- also applied: emit_event(), service_role grants (see migrations)
