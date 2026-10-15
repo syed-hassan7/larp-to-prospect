@@ -1,0 +1,305 @@
+[
+ {
+  "vendor": "vanta",
+  "url": "https://www.vanta.com/demo",
+  "in_iframe": false,
+  "captcha": true,
+  "submit_button": "",
+  "status": "fillable",
+  "filled": 8,
+  "unfilled": 0,
+  "required_unfilled": [],
+  "fields": [
+   {
+    "kind": "email",
+    "label": "Work email*",
+    "required": true,
+    "tag": "input",
+    "value": "priya.nair@acme-solutions.example"
+   },
+   {
+    "kind": "first",
+    "label": "First name*",
+    "required": true,
+    "tag": "input",
+    "value": "Priya"
+   },
+   {
+    "kind": "last",
+    "label": "Last name*",
+    "required": true,
+    "tag": "input",
+    "value": "Nair"
+   },
+   {
+    "kind": "company",
+    "label": "Company name*",
+    "required": true,
+    "tag": "input",
+    "value": "Acme Solutions"
+   },
+   {
+    "kind": "title",
+    "label": "Job title*",
+    "required": true,
+    "tag": "input",
+    "value": "Head of Engineering"
+   },
+   {
+    "kind": "company",
+    "label": "Company headcount*",
+    "required": true,
+    "tag": "select",
+    "value": "0-10"
+   },
+   {
+    "kind": "company",
+    "label": "Company HQ Country*",
+    "required": true,
+    "tag": "select",
+    "value": "United States"
+   },
+   {
+    "kind": null,
+    "label": "How did you hear about us?",
+    "required": false,
+    "tag": "select",
+    "value": "AI/LLM (ChatGPT/Perplexity)"
+   }
+  ]
+ },
+ {
+  "vendor": "drata",
+  "url": "https://drata.com/demo",
+  "in_iframe": false,
+  "captcha": false,
+  "submit_button": "Get Started",
+  "status": "fillable",
+  "filled": 5,
+  "unfilled": 0,
+  "required_unfilled": [],
+  "fields": [
+   {
+    "kind": "first",
+    "label": "First Name*",
+    "required": true,
+    "tag": "input",
+    "value": "Priya"
+   },
+   {
+    "kind": "last",
+    "label": "Last Name*",
+    "required": true,
+    "tag": "input",
+    "value": "Nair"
+   },
+   {
+    "kind": "company",
+    "label": "Company Name*",
+    "required": true,
+    "tag": "input",
+    "value": "Acme Solutions"
+   },
+   {
+    "kind": "email",
+    "label": "Work Email*",
+    "required": true,
+    "tag": "input",
+    "value": "priya.nair@acme-solutions.example"
+   },
+   {
+    "kind": "employees",
+    "label": "Number of Employees*",
+    "required": true,
+    "tag": "select",
+    "value": "101-250"
+   }
+  ]
+ },
+ {
+  "vendor": "secureframe",
+  "url": "https://secureframe.com/demo",
+  "in_iframe": false,
+  "captcha": true,
+  "submit_button": "",
+  "status": "fillable",
+  "filled": 7,
+  "unfilled": 0,
+  "required_unfilled": [],
+  "fields": [
+   {
+    "kind": "first",
+    "label": "First Name*",
+    "required": true,
+    "tag": "input",
+    "value": "Priya"
+   },
+   {
+    "kind": "last",
+    "label": "Last Name*",
+    "required": true,
+    "tag": "input",
+    "value": "Nair"
+   },
+   {
+    "kind": "email",
+    "label": "Work Email*",
+    "required": true,
+    "tag": "input",
+    "value": "priya.nair@acme-solutions.example"
+   },
+   {
+    "kind": "company",
+    "label": "Company Name*",
+    "required": true,
+    "tag": "input",
+    "value": "Acme Solutions"
+   },
+   {
+    "kind": "phone",
+    "label": "*\nAfghanistan (\u202b\u0627\u0641\u063a\u0627\u0646\u0633\u062a\u0627\u0646\u202c\u200e)\nAlbania (Sh",
+    "required": true,
+    "tag": "select",
+    "value": "Afghanistan (\u202b\u0627\u0641\u063a\u0627\u0646\u0633\u062a\u0627\u0646\u202c\u200e)"
+   },
+   {
+    "kind": "phone",
+    "label": "Phone number*",
+    "required": true,
+    "tag": "input",
+    "value": "+44 20 7946 0000"
+   },
+   {
+    "kind": "company",
+    "label": "Company Headcount\u00a0*",
+    "required": true,
+    "tag": "select",
+    "value": "1-20"
+   }
+  ]
+ },
+ {
+  "vendor": "sprinto",
+  "url": "https://sprinto.com/demo",
+  "in_iframe": false,
+  "captcha": true,
+  "submit_button": "",
+  "status": "fillable",
+  "filled": 5,
+  "unfilled": 0,
+  "required_unfilled": [],
+  "fields": [
+   {
+    "kind": "first",
+    "label": "FULL NAME*",
+    "required": true,
+    "tag": "input",
+    "value": "Priya"
+   },
+   {
+    "kind": "email",
+    "label": "WORK EMAIL*",
+    "required": true,
+    "tag": "input",
+    "value": "priya.nair@acme-solutions.example"
+   },
+   {
+    "kind": "employees",
+    "label": "NUMBER OF EMPLOYEES*",
+    "required": true,
+    "tag": "select",
+    "value": "1-25"
+   },
+   {
+    "kind": null,
+    "label": "HOW DID YOU HEAR ABOUT US?",
+    "required": false,
+    "tag": "select",
+    "value": "Search Engine"
+   },
+   {
+    "kind": "email",
+    "label": "Business email*",
+    "required": true,
+    "tag": "input",
+    "value": "priya.nair@acme-solutions.example"
+   }
+  ]
+ },
+ {
+  "vendor": "scrut",
+  "url": "https://www.scrut.io/book-a-demo",
+  "status": "no_form",
+  "visible_fields": 0,
+  "note": "no fillable form in main frame or iframes"
+ },
+ {
+  "vendor": "hyperproof",
+  "url": "https://hyperproof.io/request-demo/",
+  "in_iframe": false,
+  "captcha": true,
+  "submit_button": "",
+  "status": "fillable",
+  "filled": 8,
+  "unfilled": 0,
+  "required_unfilled": [],
+  "fields": [
+   {
+    "kind": "first",
+    "label": "First name\n*",
+    "required": true,
+    "tag": "input",
+    "value": "Priya"
+   },
+   {
+    "kind": "last",
+    "label": "Last name\n*",
+    "required": true,
+    "tag": "input",
+    "value": "Nair"
+   },
+   {
+    "kind": "email",
+    "label": "Email\n*",
+    "required": true,
+    "tag": "input",
+    "value": "priya.nair@acme-solutions.example"
+   },
+   {
+    "kind": "title",
+    "label": "Title\n*",
+    "required": true,
+    "tag": "input",
+    "value": "Head of Engineering"
+   },
+   {
+    "kind": "phone",
+    "label": "Phone\n*",
+    "required": true,
+    "tag": "input",
+    "value": "+44 20 7946 0000"
+   },
+   {
+    "kind": "company",
+    "label": "Company\n*",
+    "required": true,
+    "tag": "input",
+    "value": "Acme Solutions"
+   },
+   {
+    "kind": "company",
+    "label": "Company Size\n*",
+    "required": true,
+    "tag": "select",
+    "value": "1 - 20"
+   },
+   {
+    "kind": null,
+    "label": "Country/Region\n*",
+    "required": true,
+    "tag": "select",
+    "value": "United States"
+   }
+  ]
+ }
+]

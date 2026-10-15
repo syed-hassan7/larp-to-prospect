@@ -1,0 +1,8 @@
+{
+  "name": "larp-to-prospect",
+  "private": true,
+  "type": "module",
+  "scripts": { "run:local": "tsx scripts/run-local.ts", "typecheck": "tsc --noEmit" },
+  "devDependencies": { "@types/node": "^22.0.0", "tsx": "^4.19.0", "typescript": "^5.6.0" },
+  "dependencies": { "@vercel/functions": "^2.0.0" }
+}
