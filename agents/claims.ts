@@ -27,6 +27,44 @@ export function verifyQuote(pageText: string, quote: string): boolean {
   return normalizeText(pageText).includes(q);
 }
 
+// Gate 2 (optional): TypeSafe Jev reads the text AROUND the verified quote and decides whether it actually supports
+// the claim. Gate 1 (string match) proves a quote isn't fabricated; it can't catch a real quote whose context says
+// the opposite ("EU hosting is not available" cited as "EU hosting: yes"). Typed Choice answer + calibrated
+// probability, ~0.1-0.5s, fractions of a cent. FAIL-OPEN: no key / error / timeout => claim handled exactly as before.
+export type JevVerdict = { relation: 'supports' | 'contradicts' | 'says_nothing'; p: number; confidence: number; ms: number };
+export async function jevSupport(pageText: string, claim: { field: string; value: string; quote: string }): Promise<JevVerdict | null> {
+  const key = process.env.TYPESAFE_API_KEY;
+  if (!key) return null;
+  const norm = normalizeText(pageText), q = normalizeText(claim.quote), at = norm.indexOf(q);
+  const context = at >= 0 ? norm.slice(Math.max(0, at - 700), at + q.length + 700) : q;
+  const t = Date.now();
+  try {
+    const r = await fetch('https://api.typesafe.ai/v1/systemone', {
+      method: 'POST', signal: AbortSignal.timeout(2500),
+      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: process.env.TYPESAFE_MODEL || 'jev-latest',
+        state: { claim: `${claim.field}: ${claim.value}`, quote: claim.quote, source_context: context },
+        questions: {
+          relation: {
+            type: 'choice',
+            instructions: 'source_context is the text around the quote on the vendor page. How does source_context relate to the claim?',
+            criteria: {
+              supports: 'The source context states the claim or directly implies that it is true',
+              contradicts: 'The source context states the opposite of the claim or implies it is false',
+              says_nothing: 'The source context does not address what the claim asserts, either way',
+            },
+          },
+        },
+      }),
+    });
+    if (!r.ok) { console.warn('[jev]', r.status, (await r.text()).slice(0, 200)); return null; }
+    const a = (await r.json())?.answers?.relation;
+    if (!a?.choice) return null;
+    return { relation: a.choice, p: Number(a.probabilities?.[a.choice] ?? 0), confidence: Number(a.confidence ?? 0), ms: Date.now() - t };
+  } catch (e) { console.warn('[jev]', (e as Error).message); return null; }
+}
+
 export interface ClaimInput {
   field: string; value: string; source_url: string; quote: string;
   confidence?: Claim['confidence']; source_type?: Claim['source_type']; channel?: Channel;
@@ -41,8 +79,8 @@ export async function saveClaim(o: {
 }): Promise<SaveResult> {
   const { runId, candidateId, nodeId, parentId = null, claim: c, pageText } = o;
   const base = { candidate_id: candidateId, field: c.field, value: c.value, source_url: c.source_url, quote: c.quote };
-  const reject = async (reason: string): Promise<SaveResult> => {
-    await emit(runId, nodeId, 'claim_rejected', { ...base, reason }, parentId).catch(() => {});
+  const reject = async (reason: string, jev?: JevVerdict | null): Promise<SaveResult> => {
+    await emit(runId, nodeId, 'claim_rejected', { ...base, reason, ...(jev ? { jev } : {}) }, parentId).catch(() => {});
     return { ok: false, reason };
   };
   if (!c.field || !c.value || !c.quote || !c.source_url) return reject('incomplete claim (field/value/quote/source_url required)');
@@ -54,11 +92,16 @@ export async function saveClaim(o: {
     const qn = c.quote.replace(/,/g, '');
     if (nums.length && !nums.some(n => qn.includes(n))) return reject(`pricing figure(s) ${nums.join('/')} in value do not appear in the quote`);
   }
+  const jev = await jevSupport(pageText, c);
+  if (jev?.relation === 'contradicts' && jev.p >= 0.7) return reject(`Jev: the page around the quote contradicts the claim (p=${jev.p.toFixed(2)})`, jev);
+  if (jev?.relation === 'says_nothing' && jev.p >= 0.85) return reject(`Jev: the page around the quote does not support the claim (p=${jev.p.toFixed(2)})`, jev);
+  // weak or unclear support is kept but never counts as high-confidence evidence
+  const weak = !!jev && !(jev.relation === 'supports' && jev.p >= 0.8);
   const row = {
     run_id: runId, candidate_id: candidateId, field: c.field, value: c.value, source_url: c.source_url, quote: c.quote,
-    confidence: c.confidence ?? 'high', source_type: c.source_type ?? 'web', channel: c.channel ?? 'web',
+    confidence: weak ? 'low' as const : (c.confidence ?? 'high'), source_type: c.source_type ?? 'web', channel: c.channel ?? 'web',
   };
   const [ins] = await sbInsert<{ id: number }>('claims', row);
-  await emit(runId, nodeId, 'claim_added', { ...base, claim_id: ins.id, confidence: row.confidence, source_type: row.source_type, channel: row.channel }, parentId).catch(() => {});
+  await emit(runId, nodeId, 'claim_added', { ...base, claim_id: ins.id, confidence: row.confidence, source_type: row.source_type, channel: row.channel, ...(jev ? { jev } : {}) }, parentId).catch(() => {});
   return { ok: true, id: ins.id };
 }
