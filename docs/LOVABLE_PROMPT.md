@@ -52,4 +52,10 @@ Payloads (treat all as optional, render defensively): node_started/node_done {la
 State: the UI is a pure reducer over the append-only event list (src/lib/reduce.ts, events sorted by seq). Live mode: load history from Supabase table `run_events` where run_id = :id order by seq, then subscribe with Supabase Realtime (postgres_changes INSERT on run_events filtered run_id=eq.:id). Also read tables `runs` (id, status, candidates, verdicts, gaps, deck, cost_usd), `claims`, `outreach` with the anon key (read-only).
 Fixture mode: src/fixtures/events.ts with a realistic ~100-event run for Acme (candidates vanta, drata, sprinto, scytale, northwind-sandbox) including: one injected failure + recovery, claims with real-looking quotes and source URLs, a skeptic_verdict where Vanta is unverified (pricing unknown) and one candidate disqualified, gap_found events, outreach_filled with a screenshot_url, run_parked, a vendor_reply from northwind-sandbox that turns pricing UNKNOWN -> PASS, and deck_ready with 7 slides. Fixture mode replays it on a timer so the whole UI works with no backend.
 
-Env: VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, VITE_API_BASE_URL (default https://larp-to-prospect.vercel.app), VITE_ELEVENLABS_AGENT_ID, VITE_USE_FIXTURE (default "true" until told otherwise). Keep all API calls in src/lib/api.ts and all Supabase access in src/lib/supabase.ts.
+Config: create src/lib/config.ts exporting SUPABASE_URL, SUPABASE_ANON_KEY, API_BASE_URL, ELEVENLABS_AGENT_ID, USE_FIXTURE. Each reads import.meta.env.VITE_<NAME> and falls back to these public defaults (all are browser-safe, publishable values):
+  SUPABASE_URL = "__SUPABASE_URL__"
+  SUPABASE_ANON_KEY = "__SUPABASE_ANON_KEY__"
+  API_BASE_URL = "https://larp-to-prospect.vercel.app"
+  ELEVENLABS_AGENT_ID = "__ELEVENLABS_AGENT_ID__"
+  USE_FIXTURE = true  (string "false" in VITE_USE_FIXTURE turns it off)
+Keep all API calls in src/lib/api.ts and all Supabase access in src/lib/supabase.ts. Do NOT enable Lovable Cloud or connect a Supabase project; this app talks to an existing external Supabase with the anon key only.
